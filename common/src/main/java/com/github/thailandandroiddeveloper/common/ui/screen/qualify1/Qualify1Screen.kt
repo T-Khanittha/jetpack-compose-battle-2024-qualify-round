@@ -6,15 +6,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,8 +22,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -37,15 +34,15 @@ import com.github.thailandandroiddeveloper.common.ui.theme.AppTheme
 
 @Composable
 fun Qualify1Screen() {
-    Column {
-        CenterAlignedTopAppBar()
+    Column(modifier = Modifier.fillMaxSize()) {
+        MyTopAppBar()
         ProfileCard()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CenterAlignedTopAppBar() {
+fun MyTopAppBar() {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -54,13 +51,13 @@ fun CenterAlignedTopAppBar() {
         title = { },
         navigationIcon = {
             Image(painter = painterResource(id = R.drawable.ic_qualify_1_menu),
-                contentDescription = "",
+                contentDescription = "menu",
                 modifier = Modifier.clickable { })
 
         },
         actions = {
             Image(painter = painterResource(id = R.drawable.ic_qualify_1_profile),
-                contentDescription = "",
+                contentDescription = "profile",
                 modifier = Modifier.clickable { })
         },
     )
@@ -70,27 +67,26 @@ fun CenterAlignedTopAppBar() {
 fun ProfileCard() {
     ConstraintLayout(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
             .padding(16.dp, 16.dp, 16.dp, 72.dp)
     ) {
-        val (profileCard, thumbContainer, profileImage, profileDetail) = createRefs()
+        val (profileCard, thumbContainer) = createRefs()
         ConstraintLayout(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
                 .constrainAs(profileCard) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
+                .clip(RoundedCornerShape(16.dp))
         ) {
+            val (profileImage, profileDetail) = createRefs()
             Image(
                 painter = painterResource(id = R.drawable.img_qualify_1_profile),
-                contentDescription = "",
+                contentDescription = "profile image",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
                     .constrainAs(profileImage) {
-                        top.linkTo(parent.top)
+                        top.linkTo(profileCard.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
@@ -104,6 +100,7 @@ fun ProfileCard() {
                         bottom.linkTo(profileImage.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
                     },
                 verticalArrangement = Arrangement.Top,
             ) {
@@ -117,7 +114,7 @@ fun ProfileCard() {
                 Row(modifier = Modifier.height(20.dp)) {
                     Icon(
                         modifier = Modifier.padding(top = 2.dp, bottom = 2.dp),
-                        painter = painterResource(id = R.drawable.ic_qualify_1_gender_male),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_qualify_1_gender_male),
                         contentDescription = "gender male",
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
@@ -144,8 +141,8 @@ fun ProfileCard() {
             modifier = Modifier.constrainAs(thumbContainer) {
                 top.linkTo(profileCard.bottom)
                 bottom.linkTo(profileCard.bottom)
-                start.linkTo(profileCard.start)
-                end.linkTo(profileCard.end)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
             },
             horizontalArrangement = Arrangement.spacedBy(43.dp)
         ) {
